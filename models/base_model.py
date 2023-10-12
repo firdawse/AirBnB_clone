@@ -6,17 +6,29 @@ Our Base Module
 import uuid
 from datetime import datetime
 
+
 class BaseModel:
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """
-        Initializes a new instance of the BaseModel class.
-        - Sets a unique 'id' using UUID.
-        - Sets 'created_at' to the current datetime.
-        - Sets 'updated_at' to 'created_at' initially.
+        Initializes  new instance of bqse;odel class.
+
+        Args:
+            *args: Unused
+            **kwargs: dict thqt contqins attribute values
         """
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = self.created_at
+        if kwargs:
+            # Initialize attributes from kwargs
+            for key, value in kwargs.items():
+                if key != '__class__':
+                    if key == 'created_at' or key == 'updated_at':
+                        setattr(self, key, datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f"))
+                    else:
+                        setattr(self, key, value)
+        else:
+            # Initialize as a new instance
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = self.created_at
 
     def __str__(self):
         """
@@ -33,8 +45,6 @@ class BaseModel:
     def to_dict(self):
         """
         Converts the object to a dictionary.
-        - Adds '__class__' key with the class name.
-        - Formats 'created_at' and 'updated_at' as ISO strings.
         """
         class_name = type(self).__name__
         obj_dict = self.__dict__.copy()
