@@ -7,7 +7,7 @@ import json
 
 
 class User(BaseModel):
-    '''Derived class of Basemodel class'''
+    '''subclass of BaseModel class'''
 
     email = ""
     password = ""

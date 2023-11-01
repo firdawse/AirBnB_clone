@@ -14,20 +14,20 @@ from models.review import Review
 
 
 def parse(arg):
-    curlyBr = re.search(r"\{(.*?)\}", arg)
-    brket = re.search(r"\[(.*?)\]", arg)
-    if curlyBr is None:
-        if brket is None:
+    curly_braces = re.search(r"\{(.*?)\}", arg)
+    brackets = re.search(r"\[(.*?)\]", arg)
+    if curly_braces is None:
+        if brackets is None:
             return [i.strip(",") for i in split(arg)]
         else:
             lexer = split(arg[:brackets.span()[0]])
             retl = [i.strip(",") for i in lexer]
-            retl.append(brket.group())
+            retl.append(brackets.group())
             return retl
     else:
-        lexer = split(arg[:curlyBr.span()[0]])
+        lexer = split(arg[:curly_braces.span()[0]])
         retl = [i.strip(",") for i in lexer]
-        retl.append(curlyBr.group())
+        retl.append(curly_braces.group())
         return retl
 
 
@@ -49,11 +49,11 @@ class HBNBCommand(cmd.Cmd):
     }
 
     def emptyline(self):
-        """Doesa nothing when recieving empty line."""
+        """Do nothing upon receiving an empty line."""
         pass
 
     def default(self, arg):
-        """Default behavior for the cmd when recieving datat."""
+        """Default behavior for cmd module when input is invalid"""
         argdict = {
             "all": self.do_all,
             "show": self.do_show,
@@ -83,7 +83,7 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def do_create(self, line):
-        """
+        """Usage: create <class> <key 1>=<value 2> <key 2>=<value 2> ...
         Create a new class instance with given keys/values and print its id.
         """
         try:
@@ -117,7 +117,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_show(self, arg):
-        """
+        """Usage: show <class> <id> or <class>.show(<id>)
         Display the string representation of a class instance of a given id.
         """
         argl = parse(arg)
